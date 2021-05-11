@@ -21,11 +21,8 @@ public class EmagPage extends PageObject {
     @FindBy(className = "searchbox-submit-button")
     private WebElementFacade searchBoxSubmit;
 
-    @FindBy(className = "btn btn-sm btn-primary btn-emag")
-    private WebElementFacade addToCartButton;
-
-    @FindBy(xpath = "/html/body/div[11]/div/div/div[2]/div/div[3]/a")
-    private WebElementFacade cartDetailsButton;
+    @FindBy(id = "my_cart")
+    private WebElementFacade myCart;
 
     public void enter_keywords(String term) {
         searchBox.type(term);
@@ -36,20 +33,21 @@ public class EmagPage extends PageObject {
     }
 
     public List<String> getSearchResultsTitles() {
-        try {
-            WebElementFacade titlesGrid = find(By.id("card_grid"));
-            return titlesGrid.findElements(By.className("card-item")).stream()
-                    .map(WebElement::getText)
-                    .map(String::toLowerCase)
-                    .collect(Collectors.toList());
-        } catch (NoSuchElementException e) {
-            throw e;
-        }
+        WebElementFacade titlesGrid = find(By.id("card_grid"));
+        return titlesGrid.findElements(By.className("card-item")).stream()
+                .map(WebElement::getText)
+                .map(String::toLowerCase)
+                .collect(Collectors.toList());
     }
 
-    public void filter_by_brand(String brand) {
-        Select brandSelect = new Select(super.getDriver().findElement(By.cssSelector("select[data-name='Brand']")));
-        brandSelect.selectByVisibleText(brand);
+    public void add_to_cart() {
+        WebElementFacade resultList = find(By.id("card_grid"));
+
+        resultList.find(By.className("card-footer")).find(By.tagName("form")).submit();
+    }
+
+    public String get_cart_item_title() {
+        return find(By.cssSelector(".main-product-title-container .main-product-title")).getText();
     }
 
 

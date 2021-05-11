@@ -2,6 +2,9 @@ package com.ssvv.steps.serenity;
 
 import com.ssvv.pages.EmagPage;
 import net.thucydides.core.annotations.Step;
+import org.junit.Assert;
+
+import java.util.Locale;
 
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.containsString;
@@ -27,11 +30,6 @@ public class EmagEndUserSteps {
     }
 
     @Step
-    public void filters_search_results_by_brand(String brand) {
-        emagPage.filter_by_brand(brand);
-    }
-
-    @Step
     public void is_the_home_page() {
         emagPage.open();
     }
@@ -40,5 +38,15 @@ public class EmagEndUserSteps {
     public void looks_for(String term) {
         enters(term);
         starts_search();
+    }
+
+    @Step
+    public void adds_item_to_my_cart() {
+        emagPage.add_to_cart();
+    }
+
+    @Step
+    public void should_see_item_tile_in_cart(String item) {
+        Assert.assertTrue(emagPage.get_cart_item_title().toLowerCase(Locale.ROOT).contains(item));
     }
 }
